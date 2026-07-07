@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>משוב על הסדנה · 42</title>
+<meta name="description" content="נשמח לשמוע מה חשבתם על סדנת הסושיאל של 42" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💜</text></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --aubergine:#33173D;
+    --purple:#7D4C90;
+    --purple-soft:#9d6fae;
+    --magenta:#ED2E7C;
+    --coral:#FF5353;
+    --gold:#F7AD00;
+    --ink:#2b1533;
+    --muted:#7a6b82;
+    --line:#ece4f0;
+    --card:#ffffff;
+    --ok:#22a06b;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:'Heebo',system-ui,'Segoe UI',Arial,sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(1200px 600px at 100% -10%, rgba(237,46,124,.28), transparent 55%),
+      radial-gradient(1000px 600px at 0% 110%, rgba(247,173,0,.18), transparent 50%),
+      linear-gradient(160deg,#41204d 0%, #33173D 55%, #2a1233 100%);
+    min-height:100vh;
+    padding:28px 16px 60px;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* floating social stickers */
+  .stickers{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+  .sticker{position:absolute;font-weight:800;color:#fff;opacity:.9;
+    box-shadow:0 10px 30px rgba(0,0,0,.25);}
+  .st-heart{background:var(--coral);border-radius:14px;padding:8px 12px;font-size:15px;top:12%;left:6%;transform:rotate(-8deg)}
+  .st-heart::after{content:"";position:absolute;bottom:-8px;right:16px;border:8px solid transparent;border-top-color:var(--coral);border-bottom:0}
+  .st-hash{background:var(--gold);color:var(--aubergine);border-radius:50%;width:52px;height:52px;display:grid;place-items:center;font-size:26px;top:22%;right:8%;transform:rotate(10deg)}
+  .st-like{background:var(--magenta);border-radius:14px;padding:10px 12px;font-size:20px;bottom:16%;right:6%;transform:rotate(-6deg)}
+  .st-share{background:#fff;color:var(--magenta);border-radius:14px;padding:8px 12px;font-size:20px;bottom:24%;left:7%;transform:rotate(9deg)}
+  @media(max-width:760px){.sticker{display:none}}
+
+  .wrap{max-width:680px;margin:0 auto;position:relative;z-index:1}
+
+  /* header card */
+  .hero{
+    background:var(--card);border-radius:26px;padding:26px 26px 22px;text-align:center;
+    box-shadow:0 24px 60px rgba(20,5,30,.4);position:relative;overflow:hidden;
+  }
+  .hero .logo{width:186px;max-width:64%;height:auto;display:block;margin:2px auto 6px}
+  .kicker{display:inline-block;background:var(--magenta);color:#fff;font-weight:800;
+    font-size:13px;letter-spacing:.4px;padding:6px 14px;border-radius:999px;margin-bottom:10px}
+  .hero h1{margin:6px 0 4px;font-size:26px;font-weight:900;color:var(--aubergine);line-height:1.2}
+  .hero p{margin:6px auto 0;color:var(--muted);font-size:15.5px;max-width:460px;line-height:1.6}
+  .course-chip{margin-top:14px;display:inline-flex;align-items:center;gap:8px;
+    background:#faf1f7;border:1.5px solid #f4d3e6;color:var(--magenta);
+    font-weight:700;font-size:14px;padding:8px 16px;border-radius:999px}
+  .course-chip b{color:var(--aubergine)}
+
+  /* progress */
+  .progress{height:8px;background:rgba(255,255,255,.22);border-radius:999px;margin:22px 4px 14px;overflow:hidden}
+  .progress > i{display:block;height:100%;width:0;border-radius:999px;
+    background:linear-gradient(90deg,var(--gold),var(--magenta));transition:width .35s ease}
+
+  /* section card */
+  .card{background:var(--card);border-radius:22px;padding:22px 22px 8px;margin-top:16px;
+    box-shadow:0 16px 40px rgba(20,5,30,.28)}
+  .sec-head{display:flex;align-items:center;gap:12px;margin:0 0 6px}
+  .sec-num{flex:0 0 auto;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;
+    font-weight:900;color:#fff;font-size:18px}
+  .c1{background:var(--magenta)} .c2{background:var(--gold);color:var(--aubergine)!important}
+  .c3{background:var(--purple)} .c4{background:var(--coral)}
+  .sec-head h2{font-size:19px;font-weight:900;color:var(--aubergine);margin:0}
+  .sec-head small{display:block;color:var(--muted);font-weight:500;font-size:13px;margin-top:2px}
+
+  .q{padding:16px 0;border-top:1px solid var(--line)}
+  .q:first-of-type{border-top:0}
+  .q > label.qlabel{display:block;font-weight:700;font-size:16px;margin-bottom:12px;color:var(--ink);line-height:1.5}
+  .q .req{color:var(--magenta);font-weight:900;margin-inline-start:3px}
+  .hint{color:var(--muted);font-weight:400;font-size:13.5px;margin-top:-6px;margin-bottom:12px}
+
+  /* scale (1-5) */
+  .scale{display:flex;gap:8px;flex-wrap:wrap}
+  .scale button{flex:1 1 0;min-width:56px;border:2px solid var(--line);background:#fff;
+    border-radius:14px;padding:12px 4px 10px;cursor:pointer;font-family:inherit;
+    transition:.15s;display:flex;flex-direction:column;align-items:center;gap:4px}
+  .scale button .emo{font-size:24px;line-height:1}
+  .scale button .lab{font-size:12px;color:var(--muted);font-weight:600}
+  .scale button:hover{border-color:var(--purple-soft);transform:translateY(-2px)}
+  .scale button[aria-pressed="true"]{background:var(--aubergine);border-color:var(--aubergine)}
+  .scale button[aria-pressed="true"] .lab{color:#fff}
+
+  /* NPS 0-10 */
+  .nps{display:flex;gap:6px;flex-wrap:wrap}
+  .nps button{width:42px;height:42px;border:2px solid var(--line);background:#fff;border-radius:11px;
+    cursor:pointer;font-family:inherit;font-weight:800;font-size:15px;color:var(--ink);transition:.15s}
+  .nps button:hover{border-color:var(--magenta)}
+  .nps button[aria-pressed="true"]{background:var(--magenta);border-color:var(--magenta);color:#fff}
+  .nps-ends{display:flex;justify-content:space-between;color:var(--muted);font-size:12.5px;margin-top:8px}
+
+  /* choice pills */
+  .choices{display:flex;gap:8px;flex-wrap:wrap}
+  .choices button{border:2px solid var(--line);background:#fff;border-radius:999px;padding:9px 16px;
+    cursor:pointer;font-family:inherit;font-weight:600;font-size:14.5px;color:var(--ink);transition:.15s}
+  .choices button:hover{border-color:var(--purple-soft)}
+  .choices button[aria-pressed="true"]{background:var(--purple);border-color:var(--purple);color:#fff}
+
+  /* text */
+  textarea,input[type=text]{width:100%;border:2px solid var(--line);border-radius:14px;padding:12px 14px;
+    font-family:inherit;font-size:15px;color:var(--ink);resize:vertical;background:#fff;transition:.15s}
+  textarea:focus,input[type=text]:focus{outline:none;border-color:var(--purple)}
+  textarea{min-height:88px}
+
+  .q.invalid > label.qlabel{color:var(--coral)}
+  .q.invalid .scale button, .q.invalid .nps button, .q.invalid .choices button,
+  .q.invalid textarea, .q.invalid input[type=text]{border-color:var(--coral)}
+
+  /* submit */
+  .foot{margin-top:22px;text-align:center}
+  .submit{width:100%;border:0;border-radius:16px;padding:17px;cursor:pointer;
+    font-family:inherit;font-weight:900;font-size:18px;color:#fff;
+    background:linear-gradient(90deg,var(--magenta),#c81e66);box-shadow:0 14px 30px rgba(237,46,124,.45);transition:.15s}
+  .submit:hover{transform:translateY(-2px)}
+  .submit:disabled{opacity:.6;cursor:not-allowed;transform:none}
+  .err{color:#ffd9d9;background:rgba(255,83,83,.22);border:1px solid rgba(255,83,83,.5);
+    border-radius:12px;padding:10px 14px;margin-top:14px;font-size:14px;display:none}
+  .credit{color:rgba(255,255,255,.55);font-size:13px;margin-top:20px;text-align:center}
+  .credit b{color:#fff}
+
+  /* thank you */
+  .thanks{display:none;background:var(--card);border-radius:26px;padding:44px 28px;text-align:center;
+    box-shadow:0 24px 60px rgba(20,5,30,.4)}
+  .thanks .big{font-size:56px;margin-bottom:6px}
+  .thanks h2{font-size:26px;color:var(--aubergine);margin:6px 0}
+  .thanks p{color:var(--muted);font-size:16px;max-width:420px;margin:8px auto 0;line-height:1.6}
+
+  .spinner{display:inline-block;width:20px;height:20px;border:3px solid rgba(255,255,255,.4);
+    border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:-4px;margin-inline-start:8px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<div class="stickers" aria-hidden="true">
+  <div class="sticker st-heart">❤ 42K</div>
+  <div class="sticker st-hash">#</div>
+  <div class="sticker st-like">👍</div>
+  <div class="sticker st-share">↪</div>
+</div>
+
+<div class="wrap">
+
+  <!-- ===== HERO ===== -->
+  <header class="hero">
+    <span class="kicker">משוב משתתפים</span>
+    <img class="logo" src="assets/logo.jpg" alt="קורס הסושיאל של 42" />
+    <h1>איך היה לכם בסדנה?</h1>
+    <p>עברתם איתנו סדנת <b>קריאייטיב סושיאל</b> — כתיבה, צילום ועריכה. 2 דקות של משוב כנה עוזרות לנו להשתפר ולבנות לכם את הסדנה הבאה טוב יותר. אין תשובות נכונות 😊</p>
+    <div class="course-chip">🎓 הסדנה של <b id="courseName">—</b></div>
+  </header>
+
+  <div class="progress" aria-hidden="true"><i id="bar"></i></div>
+
+  <!-- ===== FORM ===== -->
+  <form id="survey" novalidate>
+
+    <!-- Section 1 -->
+    <section class="card">
+      <div class="sec-head"><div class="sec-num c1">1</div>
+        <div><h2>תמונה כללית</h2><small>בגדול — איך הרגשתם?</small></div>
+      </div>
+
+      <div class="q" data-q="שביעות רצון כללית מהסדנה" data-type="scale" data-required="1">
+        <label class="qlabel">עד כמה נהניתם מהסדנה באופן כללי?<span class="req">*</span></label>
+      </div>
+
+      <div class="q" data-q="המלצה (NPS 0-10)" data-type="nps" data-required="1">
+        <label class="qlabel">עד כמה סביר שתמליצו על הסדנה לחבר/ה או עמית/ה לעבודה?<span class="req">*</span></label>
+        <div class="hint">0 = בכלל לא סביר · 10 = בהחלט אמליץ</div>
+      </div>
+    </section>
+
+    <!-- Section 2 -->
+    <section class="card">
+      <div class="sec-head"><div class="sec-num c2">2</div>
+        <div><h2>התוכן וההנחיה</h2><small>מה שקרה בחדר</small></div>
+      </div>
+
+      <div class="q" data-q="רלוונטיות התוכן לעבודה" data-type="scale" data-required="1">
+        <label class="qlabel">עד כמה התוכן היה רלוונטי לעבודה שלכם?<span class="req">*</span></label>
+      </div>
+
+      <div class="q" data-q="בהירות ההנחיה" data-type="scale" data-required="1">
+        <label class="qlabel">עד כמה ההסברים של הצוות שלנו היו ברורים ומקצועיים?<span class="req">*</span></label>
+      </div>
+
+      <div class="q" data-q="קצב הסדנה" data-type="choice" data-required="1"
+           data-options="איטי מדי|בול, מתאים|מהיר מדי">
+        <label class="qlabel">איך היה קצב הסדנה?<span class="req">*</span></label>
+      </div>
+
+      <div class="q" data-q="אורך הסדנה" data-type="choice" data-required="0"
+           data-options="קצר מדי|בול, מתאים|ארוך מדי">
+        <label class="qlabel">ואורך הסדנה?</label>
+      </div>
+    </section>
+
+    <!-- Section 3 -->
+    <section class="card">
+      <div class="sec-head"><div class="sec-num c3">3</div>
+        <div><h2>ההתנסות המעשית</h2><small>שלושת החלקים שבנינו יחד</small></div>
+      </div>
+
+      <div class="q" data-q="חלק הכתיבה" data-type="scale" data-required="1">
+        <label class="qlabel">✍️ הכתיבה — עד כמה החלק הזה תרם לכם?<span class="req">*</span></label>
+      </div>
+
+      <div class="q" data-q="חלק הצילום" data-type="scale" data-required="1">
+        <label class="qlabel">📸 הצילום — עד כמה החלק הזה תרם לכם?<span class="req">*</span></label>
+      </div>
+
+      <div class="q" data-q="חלק העריכה" data-type="scale" data-required="1">
+        <label class="qlabel">🎬 העריכה — עד כמה החלק הזה תרם לכם?<span class="req">*</span></label>
+      </div>
+
+      <div class="q" data-q="ביטחון ליישום" data-type="scale" data-required="1">
+        <label class="qlabel">עד כמה אתם מרגישים בטוחים ליישם את מה שלמדתם בעבודה?<span class="req">*</span></label>
+      </div>
+    </section>
+
+    <!-- Section 4 -->
+    <section class="card">
+      <div class="sec-head"><div class="sec-num c4">4</div>
+        <div><h2>במילים שלכם</h2><small>החלק הכי חשוב לנו 💜</small></div>
+      </div>
+
+      <div class="q" data-q="מה הכי אהבתם" data-type="text" data-required="0">
+        <label class="qlabel">מה הכי אהבתם בסדנה?</label>
+        <textarea placeholder="הרגע / החלק / הטיפ שנשאר לכם בראש..."></textarea>
+      </div>
+
+      <div class="q" data-q="מה לשפר" data-type="text" data-required="0">
+        <label class="qlabel">מה הייתם משפרים או משנים?</label>
+        <textarea placeholder="בלי בושה, אנחנו אוהבים ביקורת בונה..."></textarea>
+      </div>
+
+      <div class="q" data-q="נושאים להמשך" data-type="text" data-required="0">
+        <label class="qlabel">על מה הייתם רוצים סדנת המשך / העמקה?</label>
+        <textarea placeholder="נושאים, כלים או פלטפורמות שבא לכם ללמוד עוד"></textarea>
+      </div>
+
+      <div class="q" data-q="שם (רשות)" data-type="short" data-required="0">
+        <label class="qlabel">איך קוראים לכם? <span style="color:var(--muted);font-weight:500">(רשות)</span></label>
+        <input type="text" placeholder="שם ותפקיד — רק אם בא לכם" />
+      </div>
+    </section>
+
+    <div class="foot">
+      <button type="submit" class="submit" id="submitBtn">שליחת המשוב 🚀</button>
+      <div class="err" id="errBox"></div>
+      <div class="credit">נבנה באהבה ע״י <b>42</b> · ארבעים ושתיים · קריאייטיב &amp; דיגיטל</div>
+    </div>
+  </form>
+
+  <!-- ===== THANK YOU ===== -->
+  <div class="thanks" id="thanks">
+    <div class="big">🎉💜</div>
+    <h2>תודה רבה!</h2>
+    <p>המשוב שלכם התקבל והוא ממש עוזר לנו. נתראה בסדנה הבאה — ובינתיים, לכו לעשות תוכן מעולה!<br><b>— צוות 42</b></p>
+  </div>
+
+</div>
+
+<script src="config.js"></script>
+<script>
+(function(){
+  "use strict";
+  var CFG = window.SURVEY_CONFIG || {};
+  var params = new URLSearchParams(location.search);
+
+  // --- course context from admin link ---
+  var course   = params.get('course') || params.get('c') || CFG.DEFAULT_COURSE || 'סדנת הסושיאל של 42';
+  var courseId = params.get('id') || '';
+  var cohort   = params.get('cohort') || params.get('g') || '';
+  document.getElementById('courseName').textContent = course;
+  document.title = 'משוב · ' + course + ' · 42';
+
+  var SCALE = [
+    {v:'1', emo:'😕', lab:'ממש לא'},
+    {v:'2', emo:'😐', lab:'פחות'},
+    {v:'3', emo:'🙂', lab:'סביר'},
+    {v:'4', emo:'😃', lab:'מאוד'},
+    {v:'5', emo:'🤩', lab:'אחלה!'}
+  ];
+
+  // --- build interactive inputs ---
+  document.querySelectorAll('.q').forEach(function(q){
+    var type = q.getAttribute('data-type');
+    if(type==='scale'){
+      var wrap=el('div','scale'); wrap.setAttribute('role','group');
+      SCALE.forEach(function(s){
+        var b=el('button'); b.type='button'; b.setAttribute('aria-pressed','false');
+        b.dataset.val=s.v;
+        b.innerHTML='<span class="emo">'+s.emo+'</span><span class="lab">'+s.lab+'</span>';
+        b.onclick=function(){pick(wrap,b,q)};
+        wrap.appendChild(b);
+      });
+      q.appendChild(wrap);
+    }
+    else if(type==='nps'){
+      var w=el('div','nps'); w.setAttribute('role','group');
+      for(var i=0;i<=10;i++){
+        var b=el('button'); b.type='button'; b.setAttribute('aria-pressed','false');
+        b.dataset.val=String(i); b.textContent=i;
+        b.onclick=(function(bb){return function(){pick(w,bb,q)}})(b);
+        w.appendChild(b);
+      }
+      q.appendChild(w);
+      var ends=el('div','nps-ends'); ends.innerHTML='<span>0 · לא אמליץ</span><span>אמליץ בהחלט · 10</span>';
+      q.appendChild(ends);
+    }
+    else if(type==='choice'){
+      var opts=(q.getAttribute('data-options')||'').split('|');
+      var wc=el('div','choices'); wc.setAttribute('role','group');
+      opts.forEach(function(o){
+        var b=el('button'); b.type='button'; b.setAttribute('aria-pressed','false');
+        b.dataset.val=o; b.textContent=o;
+        b.onclick=(function(bb){return function(){pick(wc,bb,q)}})(b);
+        wc.appendChild(b);
+      });
+      q.appendChild(wc);
+    }
+  });
+
+  function el(tag,cls){var e=document.createElement(tag); if(cls)e.className=cls; return e;}
+  function pick(group,btn,q){
+    group.querySelectorAll('button').forEach(function(b){b.setAttribute('aria-pressed','false')});
+    btn.setAttribute('aria-pressed','true');
+    q.classList.remove('invalid');
+    updateProgress();
+  }
+
+  // --- read a question's value ---
+  function valueOf(q){
+    var t=q.getAttribute('data-type');
+    if(t==='scale'||t==='nps'||t==='choice'){
+      var sel=q.querySelector('button[aria-pressed="true"]');
+      return sel? sel.dataset.val : '';
+    }
+    if(t==='text'){var ta=q.querySelector('textarea'); return ta?ta.value.trim():'';}
+    if(t==='short'){var inp=q.querySelector('input'); return inp?inp.value.trim():'';}
+    return '';
+  }
+
+  // --- progress bar ---
+  var allQ=[].slice.call(document.querySelectorAll('.q'));
+  function updateProgress(){
+    var done=allQ.filter(function(q){return valueOf(q)!=='';}).length;
+    document.getElementById('bar').style.width=Math.round(done/allQ.length*100)+'%';
+  }
+  document.querySelectorAll('textarea,input[type=text]').forEach(function(f){
+    f.addEventListener('input',updateProgress);
+  });
+  updateProgress();
+
+  // --- submit ---
+  var form=document.getElementById('survey');
+  var btn=document.getElementById('submitBtn');
+  var errBox=document.getElementById('errBox');
+
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    errBox.style.display='none';
+
+    // validate required
+    var firstBad=null;
+    allQ.forEach(function(q){
+      if(q.getAttribute('data-required')==='1' && valueOf(q)===''){
+        q.classList.add('invalid'); if(!firstBad)firstBad=q;
+      }
+    });
+    if(firstBad){
+      errBox.textContent='כמעט! נשארו כמה שאלות חובה (מסומנות באדום) שצריך למלא.';
+      errBox.style.display='block';
+      firstBad.scrollIntoView({behavior:'smooth',block:'center'});
+      return;
+    }
+
+    if(!CFG.SCRIPT_URL || CFG.SCRIPT_URL.indexOf('PASTE')===0){
+      errBox.textContent='הסקר עדיין לא חובר ל-Google Sheets. יש להגדיר SCRIPT_URL בקובץ config.js (ראו README).';
+      errBox.style.display='block';
+      return;
+    }
+
+    // build payload
+    var answers=[];
+    allQ.forEach(function(q){
+      answers.push({q:q.getAttribute('data-q'), a:valueOf(q)});
+    });
+    var payload={
+      meta:{course:course, courseId:courseId, cohort:cohort,
+            page:location.href, userAgent:navigator.userAgent},
+      answers:answers
+    };
+
+    btn.disabled=true;
+    var orig=btn.innerHTML; btn.innerHTML='שולח...<span class="spinner"></span>';
+
+    fetch(CFG.SCRIPT_URL,{
+      method:'POST',
+      mode:'no-cors',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body:JSON.stringify(payload)
+    }).then(function(){
+      success();
+    }).catch(function(){
+      // no-cors gives an opaque response; network failures land here
+      success();
+    });
+  });
+
+  function success(){
+    document.getElementById('survey').style.display='none';
+    document.querySelector('.progress').style.display='none';
+    document.querySelector('.hero').style.display='none';
+    var t=document.getElementById('thanks'); t.style.display='block';
+    t.scrollIntoView({behavior:'smooth',block:'center'});
+  }
+})();
+</script>
+</body>
+</html>

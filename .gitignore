@@ -1,0 +1,7 @@
+# Client presentation — confidential, not for the public repo
+*.pptx
+
+# Local tooling / editor
+.claude/
+.DS_Store
+Thumbs.db

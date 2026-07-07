@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>יצירת לינק לסקר · 42 (אדמין)</title>
+<meta name="robots" content="noindex" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔗</text></svg>" />
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --aubergine:#33173D;--purple:#7D4C90;--magenta:#ED2E7C;--coral:#FF5353;
+    --gold:#F7AD00;--ink:#2b1533;--muted:#7a6b82;--line:#ece4f0;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Heebo',system-ui,Arial,sans-serif;color:var(--ink);
+    background:linear-gradient(160deg,#41204d,#33173D 60%,#2a1233);min-height:100vh;padding:32px 16px 60px}
+  .wrap{max-width:640px;margin:0 auto}
+  .head{text-align:center;color:#fff;margin-bottom:20px}
+  .head .tag{display:inline-block;background:var(--gold);color:var(--aubergine);font-weight:800;
+    font-size:13px;padding:5px 14px;border-radius:999px;margin-bottom:12px}
+  .head h1{margin:6px 0;font-size:26px;font-weight:900}
+  .head p{margin:0;color:rgba(255,255,255,.7);font-size:15px}
+  .card{background:#fff;border-radius:22px;padding:24px;box-shadow:0 20px 50px rgba(20,5,30,.35)}
+  label{display:block;font-weight:700;font-size:15px;margin:16px 0 7px}
+  label:first-child{margin-top:0}
+  .req{color:var(--magenta)}
+  small.help{display:block;color:var(--muted);font-weight:400;font-size:13px;margin:-4px 0 8px}
+  input{width:100%;border:2px solid var(--line);border-radius:13px;padding:12px 14px;
+    font-family:inherit;font-size:15px;color:var(--ink)}
+  input:focus{outline:none;border-color:var(--purple)}
+  .gen{width:100%;margin-top:22px;border:0;border-radius:14px;padding:16px;cursor:pointer;
+    font-family:inherit;font-weight:900;font-size:17px;color:#fff;
+    background:linear-gradient(90deg,var(--magenta),#c81e66);box-shadow:0 12px 26px rgba(237,46,124,.4)}
+  .gen:hover{transform:translateY(-2px)}
+  .out{margin-top:22px;display:none}
+  .out .lnk{background:#faf1f7;border:2px dashed #f0c3dd;border-radius:13px;padding:14px;
+    font-size:14px;word-break:break-all;color:var(--aubergine);font-weight:600}
+  .row{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+  .row button{flex:1 1 auto;border:2px solid var(--purple);background:#fff;color:var(--purple);
+    border-radius:12px;padding:11px;font-family:inherit;font-weight:800;font-size:14.5px;cursor:pointer}
+  .row button:hover{background:var(--purple);color:#fff}
+  .row a.btn{flex:1 1 auto;text-align:center;text-decoration:none;border:2px solid var(--gold);
+    background:var(--gold);color:var(--aubergine);border-radius:12px;padding:11px;font-weight:800;font-size:14.5px}
+  .copied{color:var(--purple);font-weight:800;font-size:13.5px;text-align:center;margin-top:10px;display:none}
+  .note{color:rgba(255,255,255,.6);font-size:13px;text-align:center;margin-top:20px;line-height:1.6}
+  .qr{margin-top:16px;text-align:center}
+  .qr img{background:#fff;border-radius:12px;padding:10px;max-width:180px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <span class="tag">אזור אדמין · 42</span>
+    <h1>🔗 יצירת לינק לסקר</h1>
+    <p>מלאו את פרטי הקורס וקבלו לינק אישי לשליחה למשתתפים</p>
+  </div>
+
+  <div class="card">
+    <label>שם הלקוח / הקורס <span class="req">*</span></label>
+    <small class="help">כמו שיופיע למשתתפים בראש הסקר. לדוגמה: "הסוכנים של מגדל"</small>
+    <input id="course" type="text" placeholder="הסוכנים של מגדל" autocomplete="off" />
+
+    <label>מזהה קורס (רשות)</label>
+    <small class="help">קוד פנימי שיעזור לכם לסנן בגיליון. לדוגמה: migdal-2026-07</small>
+    <input id="cid" type="text" placeholder="migdal-2026-07" autocomplete="off" />
+
+    <label>מחזור / קבוצה (רשות)</label>
+    <small class="help">אם יש כמה קבוצות לאותו לקוח. לדוגמה: "קבוצה א׳"</small>
+    <input id="cohort" type="text" placeholder="קבוצה א׳" autocomplete="off" />
+
+    <button class="gen" id="genBtn">צרו לי לינק ✨</button>
+
+    <div class="out" id="out">
+      <div class="lnk" id="linkText"></div>
+      <div class="row">
+        <button id="copyBtn">📋 העתקת הלינק</button>
+        <a class="btn" id="openBtn" target="_blank" rel="noopener">👀 תצוגה מקדימה</a>
+      </div>
+      <div class="copied" id="copied">✓ הלינק הועתק!</div>
+      <div class="qr" id="qrBox"></div>
+    </div>
+  </div>
+
+  <p class="note">שלחו את הלינק בוואטסאפ / מייל למשתתפי הקורס.<br>כל התשובות נאספות אוטומטית לגיליון ה-Google Sheets שלכם.</p>
+</div>
+
+<script>
+(function(){
+  var base = location.href.replace(/admin\.html.*$/,'').replace(/\/$/,'') + '/index.html';
+  var out=document.getElementById('out');
+
+  document.getElementById('genBtn').onclick=function(){
+    var course=document.getElementById('course').value.trim();
+    if(!course){ document.getElementById('course').focus(); document.getElementById('course').style.borderColor='var(--coral)'; return; }
+    document.getElementById('course').style.borderColor='';
+
+    var p=new URLSearchParams();
+    p.set('course',course);
+    var cid=document.getElementById('cid').value.trim();
+    var cohort=document.getElementById('cohort').value.trim();
+    if(cid) p.set('id',cid);
+    if(cohort) p.set('cohort',cohort);
+
+    var url=base+'?'+p.toString();
+    document.getElementById('linkText').textContent=url;
+    document.getElementById('openBtn').href=url;
+    out.style.display='block';
+
+    // QR (external image service — works when online)
+    var qr='https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=0&data='+encodeURIComponent(url);
+    document.getElementById('qrBox').innerHTML='<img src="'+qr+'" alt="QR של הלינק" /><div style="color:var(--muted);font-size:12px;margin-top:6px">סריקה מהירה לנייד</div>';
+    out.scrollIntoView({behavior:'smooth',block:'center'});
+  };
+
+  document.getElementById('copyBtn').onclick=function(){
+    var txt=document.getElementById('linkText').textContent;
+    navigator.clipboard.writeText(txt).then(function(){
+      var c=document.getElementById('copied'); c.style.display='block';
+      setTimeout(function(){c.style.display='none'},2200);
+    });
+  };
+})();
+</script>
+</body>
+</html>
