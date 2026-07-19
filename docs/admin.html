@@ -87,7 +87,8 @@
 
 <script>
 (function(){
-  var base = location.href.replace(/admin\.html.*$/,'').replace(/\/$/,'') + '/index.html';
+  // בונה את הכתובת של הסקר יחסית לדף האדמין — עובד גם ל-/admin וגם ל-/admin.html
+  var base = new URL('index.html', location.href).href;
   var out=document.getElementById('out');
 
   document.getElementById('genBtn').onclick=function(){
