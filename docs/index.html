@@ -60,10 +60,11 @@
     font-size:13px;letter-spacing:.4px;padding:6px 14px;border-radius:999px;margin-bottom:10px}
   .hero h1{margin:6px 0 4px;font-size:26px;font-weight:900;color:var(--aubergine);line-height:1.2}
   .hero p{margin:6px auto 0;color:var(--muted);font-size:15.5px;max-width:460px;line-height:1.6}
-  .course-chip{margin-top:14px;display:inline-flex;align-items:center;gap:8px;
-    background:#faf1f7;border:1.5px solid #f4d3e6;color:var(--magenta);
-    font-weight:700;font-size:14px;padding:8px 16px;border-radius:999px}
-  .course-chip b{color:var(--aubergine)}
+  .cta{margin-top:16px;border:0;cursor:pointer;font-family:inherit;
+    background:linear-gradient(90deg,var(--gold),#f59300);color:var(--aubergine);
+    font-weight:900;font-size:16px;padding:13px 26px;border-radius:999px;
+    box-shadow:0 10px 24px rgba(247,173,0,.4);transition:.15s}
+  .cta:hover{transform:translateY(-2px)}
 
   /* progress */
   .progress{height:8px;background:rgba(255,255,255,.22);border-radius:999px;margin:22px 4px 14px;overflow:hidden}
@@ -162,9 +163,9 @@
   <header class="hero">
     <span class="kicker">משוב משתתפים</span>
     <img class="logo" src="assets/logo.jpg" alt="קורס הסושיאל של 42" />
-    <h1>איך היה לכם בסדנה?</h1>
-    <p>עברתם איתנו סדנת <b>קריאייטיב סושיאל</b> — כתיבה, צילום ועריכה. 2 דקות של משוב כנה עוזרות לנו להשתפר ולבנות לכם את הסדנה הבאה טוב יותר. אין תשובות נכונות 😊</p>
-    <div class="course-chip">🎓 הסדנה של <b id="courseName">—</b></div>
+    <h1>איך הייתה הסדנה?</h1>
+    <p>עברתם איתנו סדנת <b>קריאייטיב סושיאל</b>, כתבנו, צילמנו, ערכנו, צחקנו ונהנינו? עכשיו הגיע זמן המשוב! 2 דקות של משוב אמיתי יעזרו לנו להשתפר ולבנות את הסדנה טוב יותר. אין תשובות נכונות או לא נכונות, תתפרעו 🫢</p>
+    <button type="button" class="cta" id="startBtn">קחו אותי למשוב 👇</button>
   </header>
 
   <div class="progress" aria-hidden="true"><i id="bar"></i></div>
@@ -178,28 +179,29 @@
         <div><h2>תמונה כללית</h2><small>בגדול — איך הרגשתם?</small></div>
       </div>
 
-      <div class="q" data-q="שביעות רצון כללית מהסדנה" data-type="scale" data-required="1">
-        <label class="qlabel">עד כמה נהניתם מהסדנה באופן כללי?<span class="req">*</span></label>
+      <div class="q" data-q="שביעות רצון כללית מהסדנה" data-type="scale" data-required="1"
+           data-labels="ממש לא|סביר|היה נחמד|מאוד|אחלה!">
+        <label class="qlabel">האם נהניתם מהסדנה?<span class="req">*</span></label>
       </div>
 
       <div class="q" data-q="המלצה (NPS 0-10)" data-type="nps" data-required="1">
-        <label class="qlabel">עד כמה סביר שתמליצו על הסדנה לחבר/ה או עמית/ה לעבודה?<span class="req">*</span></label>
-        <div class="hint">0 = בכלל לא סביר · 10 = בהחלט אמליץ</div>
+        <label class="qlabel">האם תמליצו על הסדנה לחבר/ה או עמית/ה לעבודה?<span class="req">*</span></label>
+        <div class="hint">0 = לא סביר בכלל · 10 = בהחלט אמליץ</div>
       </div>
     </section>
 
     <!-- Section 2 -->
     <section class="card">
       <div class="sec-head"><div class="sec-num c2">2</div>
-        <div><h2>התוכן וההנחיה</h2><small>מה שקרה בחדר</small></div>
+        <div><h2>התוכן והמנחים</h2></div>
       </div>
 
       <div class="q" data-q="רלוונטיות התוכן לעבודה" data-type="scale" data-required="1">
-        <label class="qlabel">עד כמה התוכן היה רלוונטי לעבודה שלכם?<span class="req">*</span></label>
+        <label class="qlabel">האם התוכן היה רלוונטי לעבודה שלכם?<span class="req">*</span></label>
       </div>
 
       <div class="q" data-q="בהירות ההנחיה" data-type="scale" data-required="1">
-        <label class="qlabel">עד כמה ההסברים של הצוות שלנו היו ברורים ומקצועיים?<span class="req">*</span></label>
+        <label class="qlabel">האם ההסברים של הצוות שלנו היו ברורים ומקצועיים?<span class="req">*</span></label>
       </div>
 
       <div class="q" data-q="קצב הסדנה" data-type="choice" data-required="1"
@@ -216,7 +218,7 @@
     <!-- Section 3 -->
     <section class="card">
       <div class="sec-head"><div class="sec-num c3">3</div>
-        <div><h2>ההתנסות המעשית</h2><small>שלושת החלקים שבנינו יחד</small></div>
+        <div><h2>החלק המעשי</h2><small>שלושת החלקים שבנינו יחד</small></div>
       </div>
 
       <div class="q" data-q="חלק הכתיבה" data-type="scale" data-required="1">
@@ -239,7 +241,7 @@
     <!-- Section 4 -->
     <section class="card">
       <div class="sec-head"><div class="sec-num c4">4</div>
-        <div><h2>במילים שלכם</h2><small>החלק הכי חשוב לנו 💜</small></div>
+        <div><h2>פינת הביטוי העצמי</h2><small>החלק הכי חשוב לנו 💜</small></div>
       </div>
 
       <div class="q" data-q="מה הכי אהבתם" data-type="text" data-required="0">
@@ -248,12 +250,12 @@
       </div>
 
       <div class="q" data-q="מה לשפר" data-type="text" data-required="0">
-        <label class="qlabel">מה הייתם משפרים או משנים?</label>
+        <label class="qlabel">מה הייתם משפרים?</label>
         <textarea placeholder="בלי בושה, אנחנו אוהבים ביקורת בונה..."></textarea>
       </div>
 
       <div class="q" data-q="נושאים להמשך" data-type="text" data-required="0">
-        <label class="qlabel">על מה הייתם רוצים סדנת המשך / העמקה?</label>
+        <label class="qlabel">באיזה נושא הייתם רוצים סדנת המשך?</label>
         <textarea placeholder="נושאים, כלים או פלטפורמות שבא לכם ללמוד עוד"></textarea>
       </div>
 
@@ -290,26 +292,33 @@
   var course   = params.get('course') || params.get('c') || CFG.DEFAULT_COURSE || 'סדנת הסושיאל של 42';
   var courseId = params.get('id') || '';
   var cohort   = params.get('cohort') || params.get('g') || '';
-  document.getElementById('courseName').textContent = course;
   document.title = 'משוב · ' + course + ' · 42';
 
-  var SCALE = [
-    {v:'1', emo:'😕', lab:'ממש לא'},
-    {v:'2', emo:'😐', lab:'פחות'},
-    {v:'3', emo:'🙂', lab:'סביר'},
-    {v:'4', emo:'😃', lab:'מאוד'},
-    {v:'5', emo:'🤩', lab:'אחלה!'}
-  ];
+  // CTA in the hero — גלילה חלקה לשאלה הראשונה
+  var startBtn = document.getElementById('startBtn');
+  if(startBtn){
+    startBtn.addEventListener('click', function(){
+      var first = document.querySelector('#survey .card');
+      if(first) first.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  }
+
+  // אימוג'ים קבועים; תוויות ברירת מחדל — ניתן לעקוף לכל שאלה עם data-labels
+  var SCALE_EMO = ['😕','😐','🙂','😃','🤩'];
+  var SCALE_LABELS = ['ממש לא','פחות','בערך','מאוד','בהחלט'];
 
   // --- build interactive inputs ---
   document.querySelectorAll('.q').forEach(function(q){
     var type = q.getAttribute('data-type');
     if(type==='scale'){
+      var labels = SCALE_LABELS;
+      var custom = q.getAttribute('data-labels');
+      if(custom){ labels = custom.split('|'); }
       var wrap=el('div','scale'); wrap.setAttribute('role','group');
-      SCALE.forEach(function(s){
+      SCALE_EMO.forEach(function(emo, i){
         var b=el('button'); b.type='button'; b.setAttribute('aria-pressed','false');
-        b.dataset.val=s.v;
-        b.innerHTML='<span class="emo">'+s.emo+'</span><span class="lab">'+s.lab+'</span>';
+        b.dataset.val=String(i+1);
+        b.innerHTML='<span class="emo">'+emo+'</span><span class="lab">'+(labels[i]||'')+'</span>';
         b.onclick=function(){pick(wrap,b,q)};
         wrap.appendChild(b);
       });
