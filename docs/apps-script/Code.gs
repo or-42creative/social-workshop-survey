@@ -27,7 +27,12 @@ function doPost(e) {
   var lock = LockService.getScriptLock();
   lock.waitLock(30000); // מונע התנגשות בין שליחות במקביל
   try {
-    var data = JSON.parse(e.postData.contents);
+    // הנתונים מגיעים כפרמטר מקודד (payload) כדי לשמור על עברית תקינה (UTF-8).
+    // נשמרת גם תאימות לאחור למי ששולח JSON גולמי בגוף הבקשה.
+    var raw = (e.parameter && e.parameter.payload)
+      ? e.parameter.payload
+      : (e.postData ? e.postData.contents : '{}');
+    var data = JSON.parse(raw);
     var meta = data.meta || {};
     var answers = data.answers || [];
 
