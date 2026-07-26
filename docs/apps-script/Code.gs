@@ -88,9 +88,27 @@ function doPost(e) {
   }
 }
 
-// בדיקה מהירה שה-Web App חי (פתיחה בדפדפן)
-function doGet() {
-  return json({ ok: true, service: 'סקר 42', status: 'live' });
+// בדיקה מהירה שה-Web App חי (פתיחה בדפדפן).
+// אבחון: הוספת ?check=42data מחזירה כמה שורות נאספו ותקציר של השורה האחרונה,
+// כדי לוודא שהכתיבה עובדת והעברית תקינה — בלי צורך לפתוח את הגיליון.
+function doGet(e) {
+  var base = { ok: true, service: 'סקר 42', status: 'live' };
+  try {
+    if (e && e.parameter && e.parameter.check === '42data') {
+      var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
+      if (!sheet || sheet.getLastRow() < 2) {
+        base.rows = 0;
+      } else {
+        var lastRow = sheet.getLastRow();
+        base.rows = lastRow - 1; // פחות שורת הכותרת
+        base.lastRow = sheet.getRange(lastRow, 1, 1, Math.min(3, sheet.getLastColumn()))
+                            .getDisplayValues()[0]; // חותמת זמן, קורס, מזהה
+      }
+    }
+  } catch (err) {
+    base.diagError = String(err);
+  }
+  return json(base);
 }
 
 function json(obj) {
