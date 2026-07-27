@@ -82,8 +82,11 @@
   .sec-head h2{font-size:19px;font-weight:900;color:var(--aubergine);margin:0}
   .sec-head small{display:block;color:var(--muted);font-weight:500;font-size:13px;margin-top:2px}
 
+  .lesson-title{font-weight:900;font-size:16px;color:var(--purple);
+    background:#f6eefb;border-radius:12px;padding:12px 15px;margin:18px 0 0}
   .q{padding:16px 0;border-top:1px solid var(--line)}
   .q:first-of-type{border-top:0}
+  .lesson-title + .q{border-top:0;padding-top:12px}
   .q > label.qlabel{display:block;font-weight:700;font-size:16px;margin-bottom:12px;color:var(--ink);line-height:1.5}
   .q .req{color:var(--magenta);font-weight:900;margin-inline-start:3px}
   .hint{color:var(--muted);font-weight:400;font-size:13.5px;margin-top:-6px;margin-bottom:12px}
@@ -218,23 +221,34 @@
     <!-- Section 3 -->
     <section class="card">
       <div class="sec-head"><div class="sec-num c3">3</div>
-        <div><h2>החלק המעשי</h2><small>שלושת החלקים שבנינו יחד</small></div>
+        <div><h2>החלק המעשי</h2><small>איך היו שלושת השיעורים?</small></div>
       </div>
 
-      <div class="q" data-q="חלק הכתיבה" data-type="scale" data-required="1">
-        <label class="qlabel">✍️ הכתיבה — עד כמה החלק הזה תרם לכם?<span class="req">*</span></label>
+      <!-- שיעור 1 -->
+      <div class="lesson-title">📱 שיעור 1 — יסודות הסושיאל והכתיבה</div>
+      <div class="q" data-q="שיעור 1 (יסודות וכתיבה) — מעניין" data-type="scale" data-required="1">
+        <label class="qlabel">כמה מעניין זה היה?<span class="req">*</span></label>
+      </div>
+      <div class="q" data-q="שיעור 1 (יסודות וכתיבה) — מועיל" data-type="scale" data-required="1">
+        <label class="qlabel">כמה מועיל זה היה?<span class="req">*</span></label>
       </div>
 
-      <div class="q" data-q="חלק הצילום" data-type="scale" data-required="1">
-        <label class="qlabel">📸 הצילום — עד כמה החלק הזה תרם לכם?<span class="req">*</span></label>
+      <!-- שיעור 2 -->
+      <div class="lesson-title">💡 שיעור 2 — תובנות, נקודות השקה ו-RTM</div>
+      <div class="q" data-q="שיעור 2 (תובנות ו-RTM) — מעניין" data-type="scale" data-required="1">
+        <label class="qlabel">כמה מעניין זה היה?<span class="req">*</span></label>
+      </div>
+      <div class="q" data-q="שיעור 2 (תובנות ו-RTM) — מועיל" data-type="scale" data-required="1">
+        <label class="qlabel">כמה מועיל זה היה?<span class="req">*</span></label>
       </div>
 
-      <div class="q" data-q="חלק העריכה" data-type="scale" data-required="1">
-        <label class="qlabel">🎬 העריכה — עד כמה החלק הזה תרם לכם?<span class="req">*</span></label>
+      <!-- שיעור 3 -->
+      <div class="lesson-title">🎬 שיעור 3 — צילום ועריכה</div>
+      <div class="q" data-q="שיעור 3 (צילום ועריכה) — מעניין" data-type="scale" data-required="1">
+        <label class="qlabel">כמה מעניין זה היה?<span class="req">*</span></label>
       </div>
-
-      <div class="q" data-q="ביטחון ליישום" data-type="scale" data-required="1">
-        <label class="qlabel">עד כמה אתם מרגישים בטוחים ליישם את מה שלמדתם בעבודה?<span class="req">*</span></label>
+      <div class="q" data-q="שיעור 3 (צילום ועריכה) — מועיל" data-type="scale" data-required="1">
+        <label class="qlabel">כמה מועיל זה היה?<span class="req">*</span></label>
       </div>
     </section>
 
