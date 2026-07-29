@@ -118,14 +118,15 @@
   .choices button[aria-pressed="true"]{background:var(--purple);border-color:var(--purple);color:#fff}
 
   /* text */
-  textarea,input[type=text]{width:100%;border:2px solid var(--line);border-radius:14px;padding:12px 14px;
+  textarea,input[type=text],input[type=email]{width:100%;border:2px solid var(--line);border-radius:14px;padding:12px 14px;
     font-family:inherit;font-size:15px;color:var(--ink);resize:vertical;background:#fff;transition:.15s}
-  textarea:focus,input[type=text]:focus{outline:none;border-color:var(--purple)}
+  input[type=email]{direction:ltr;text-align:right}
+  textarea:focus,input[type=text]:focus,input[type=email]:focus{outline:none;border-color:var(--purple)}
   textarea{min-height:88px}
 
   .q.invalid > label.qlabel{color:var(--coral)}
   .q.invalid .scale button, .q.invalid .nps button, .q.invalid .choices button,
-  .q.invalid textarea, .q.invalid input[type=text]{border-color:var(--coral)}
+  .q.invalid textarea, .q.invalid input[type=text], .q.invalid input[type=email]{border-color:var(--coral)}
 
   /* submit */
   .foot{margin-top:22px;text-align:center}
@@ -277,6 +278,12 @@
         <label class="qlabel">איך קוראים לכם? <span style="color:var(--muted);font-weight:500">(רשות)</span></label>
         <input type="text" placeholder="שם ותפקיד — רק אם בא לכם" />
       </div>
+
+      <div class="q" data-q="מייל" data-type="email" data-required="0">
+        <label class="qlabel">מייל 📩</label>
+        <div class="hint">מומלץ להכניס כתובת אמיתית. לכתובת הזאת תישלח מצגת הקורס</div>
+        <input type="email" inputmode="email" autocomplete="email" placeholder="name@example.com" />
+      </div>
     </section>
 
     <div class="foot">
@@ -289,8 +296,8 @@
   <!-- ===== THANK YOU ===== -->
   <div class="thanks" id="thanks">
     <div class="big">🎉💜</div>
-    <h2>תודה רבה!</h2>
-    <p>המשוב שלכם התקבל והוא ממש עוזר לנו. נתראה בסדנה הבאה — ובינתיים, לכו לעשות תוכן מעולה!<br><b>— צוות 42</b></p>
+    <h2>תודה על הפידבק!</h2>
+    <p>מצגת הקורס כבר בדרך אליך למייל!<br><b>— צוות 42</b></p>
   </div>
 
 </div>
@@ -379,9 +386,11 @@
       return sel? sel.dataset.val : '';
     }
     if(t==='text'){var ta=q.querySelector('textarea'); return ta?ta.value.trim():'';}
-    if(t==='short'){var inp=q.querySelector('input'); return inp?inp.value.trim():'';}
+    if(t==='short'||t==='email'){var inp=q.querySelector('input'); return inp?inp.value.trim():'';}
     return '';
   }
+
+  function isEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
 
   // --- progress bar ---
   var allQ=[].slice.call(document.querySelectorAll('.q'));
@@ -389,7 +398,7 @@
     var done=allQ.filter(function(q){return valueOf(q)!=='';}).length;
     document.getElementById('bar').style.width=Math.round(done/allQ.length*100)+'%';
   }
-  document.querySelectorAll('textarea,input[type=text]').forEach(function(f){
+  document.querySelectorAll('textarea,input[type=text],input[type=email]').forEach(function(f){
     f.addEventListener('input',updateProgress);
   });
   updateProgress();
@@ -415,6 +424,19 @@
       errBox.style.display='block';
       firstBad.scrollIntoView({behavior:'smooth',block:'center'});
       return;
+    }
+
+    // validate email format (if filled)
+    var emailQ=document.querySelector('.q[data-type="email"]');
+    if(emailQ){
+      var emVal=valueOf(emailQ);
+      if(emVal && !isEmail(emVal)){
+        emailQ.classList.add('invalid');
+        errBox.textContent='כתובת המייל לא נראית תקינה — בדקו אותה כדי שנוכל לשלוח את מצגת הקורס.';
+        errBox.style.display='block';
+        emailQ.scrollIntoView({behavior:'smooth',block:'center'});
+        return;
+      }
     }
 
     if(!CFG.SCRIPT_URL || CFG.SCRIPT_URL.indexOf('PASTE')===0){

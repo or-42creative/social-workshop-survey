@@ -23,6 +23,11 @@ var SHEET_NAME = 'תשובות';
 // עמודות המטא-דאטה הקבועות (תמיד ראשונות, לפי סדר זה)
 var META_COLS = ['חותמת זמן', 'קורס', 'מזהה קורס', 'מחזור'];
 
+// קישור למצגת הקורס שיישלח במייל למשתתפים שהשאירו כתובת
+var PRESENTATION_URL = 'https://docs.google.com/presentation/d/12XDwpDNIAus16B2IekDScTUrwoRGq0lO/edit?usp=sharing&ouid=114539384860638201978&rtpof=true&sd=true';
+// שם השאלה בטופס שמכילה את כתובת המייל
+var EMAIL_FIELD = 'מייל';
+
 function doPost(e) {
   var lock = LockService.getScriptLock();
   lock.waitLock(30000); // מונע התנגשות בין שליחות במקביל
@@ -80,7 +85,20 @@ function doPost(e) {
 
     sheet.appendRow(row);
 
-    return json({ ok: true });
+    // שליחת מצגת הקורס למייל שהמשתתף השאיר (אם תקין)
+    var sent = false;
+    var email = (map[EMAIL_FIELD] || '').toString().trim();
+    if (email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      try {
+        sendPresentation_(email);
+        sent = true;
+      } catch (mailErr) {
+        // לא מפילים את הבקשה אם המייל נכשל (למשל מכסת שליחה) — השורה כבר נשמרה
+        return json({ ok: true, mailError: String(mailErr) });
+      }
+    }
+
+    return json({ ok: true, mailSent: sent });
   } catch (err) {
     return json({ ok: false, error: String(err) });
   } finally {
@@ -109,6 +127,33 @@ function doGet(e) {
     base.diagError = String(err);
   }
   return json(base);
+}
+
+// שולח את מצגת הקורס במייל מעוצב (מהחשבון שמריץ את הסקריפט)
+function sendPresentation_(email) {
+  var subject = 'מצגת הקורס · קורס הסושיאל של 42 💜';
+  var html =
+    '<div dir="rtl" style="font-family:Arial,Helvetica,sans-serif;font-size:16px;color:#2b1533;line-height:1.7;max-width:520px;margin:0 auto">' +
+      '<h2 style="color:#33173D;margin:0 0 12px">תודה על המשוב! 🎉</h2>' +
+      '<p style="margin:0 0 16px">כמו שהובטח — הנה מצגת הקורס מסדנת הקריאייטיב סושיאל שלנו. ' +
+      'שמרו אותה, חזרו אליה, ובעיקר — לכו לעשות תוכן מעולה 🚀</p>' +
+      '<p style="margin:0 0 22px">' +
+        '<a href="' + PRESENTATION_URL + '" ' +
+        'style="display:inline-block;background:#ED2E7C;color:#fff;text-decoration:none;' +
+        'font-weight:bold;font-size:16px;padding:14px 28px;border-radius:12px">📊 צפייה במצגת הקורס</a>' +
+      '</p>' +
+      '<p style="margin:0 0 4px;color:#7a6b82;font-size:13px">אם הכפתור לא עובד, זה הקישור:</p>' +
+      '<p style="margin:0 0 22px;font-size:12px;word-break:break-all"><a href="' + PRESENTATION_URL + '" style="color:#7D4C90">' + PRESENTATION_URL + '</a></p>' +
+      '<p style="margin:0;color:#33173D;font-weight:bold">— צוות 42 · ארבעים ושתיים</p>' +
+    '</div>';
+
+  MailApp.sendEmail({
+    to: email,
+    subject: subject,
+    htmlBody: html,
+    name: '42 · קורס הסושיאל',
+    body: 'תודה על המשוב! הנה מצגת הקורס: ' + PRESENTATION_URL + '\n\n— צוות 42'
+  });
 }
 
 function json(obj) {
