@@ -139,6 +139,15 @@ function doGet(e) {
   return json(base);
 }
 
+// ▶️ הריצו את הפונקציה הזו פעם אחת מהעורך (בחרו אותה בתפריט למעלה ולחצו Run)
+//    כדי לאשר את הרשאת שליחת המייל. היא גם תשלח מייל בדיקה לכתובת שלמטה.
+//    (פונקציות שמסתיימות ב-_ הן פרטיות ולא מופיעות ברשימת ה-Run — לכן זו בלי _)
+function authorizeMail() {
+  var TEST_EMAIL = 'or@42creative.co.il'; // שנו לכתובת שאליה תרצו לקבל את מייל הבדיקה
+  sendPresentation_(TEST_EMAIL);
+  Logger.log('נשלח מייל בדיקה אל ' + TEST_EMAIL);
+}
+
 // שולח את מצגת הקורס במייל מעוצב (מהחשבון שמריץ את הסקריפט)
 function sendPresentation_(email) {
   var subject = 'מצגת הקורס · קורס הסושיאל של 42 💜';
