@@ -113,6 +113,7 @@ function doGet(e) {
   var base = { ok: true, service: 'סקר 42', status: 'live' };
   try {
     if (e && e.parameter && e.parameter.check === '42data') {
+      base.mailFeature = (typeof sendPresentation_ === 'function'); // האם גרסת המייל פרוסה
       var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
       if (!sheet || sheet.getLastRow() < 2) {
         base.rows = 0;
@@ -121,6 +122,15 @@ function doGet(e) {
         base.rows = lastRow - 1; // פחות שורת הכותרת
         base.lastRow = sheet.getRange(lastRow, 1, 1, Math.min(3, sheet.getLastColumn()))
                             .getDisplayValues()[0]; // חותמת זמן, קורס, מזהה
+      }
+      // ?check=42data&sendtest=EMAIL — שולח מייל בדיקה ומחזיר הצלחה/שגיאה מדויקת
+      if (e.parameter.sendtest) {
+        try {
+          sendPresentation_(e.parameter.sendtest);
+          base.mailTest = 'OK — נשלח אל ' + e.parameter.sendtest;
+        } catch (mErr) {
+          base.mailTest = 'ERROR: ' + String(mErr);
+        }
       }
     }
   } catch (err) {
