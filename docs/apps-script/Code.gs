@@ -25,6 +25,9 @@ var META_COLS = ['חותמת זמן', 'קורס', 'מזהה קורס', 'מחזו
 
 // קישור למצגת הקורס שיישלח במייל למשתתפים שהשאירו כתובת
 var PRESENTATION_URL = 'https://docs.google.com/presentation/d/12XDwpDNIAus16B2IekDScTUrwoRGq0lO/edit?usp=sharing&ouid=114539384860638201978&rtpof=true&sd=true';
+// קישור לכל הקורסים + כתובת ליצירת קשר (מופיעים במייל)
+var COURSES_URL = 'https://42creative.co.il/social-course/';
+var CONTACT_EMAIL = 'contact@42creative.co.il';
 // שם השאלה בטופס שמכילה את כתובת המייל
 var EMAIL_FIELD = 'מייל';
 
@@ -163,6 +166,16 @@ function sendPresentation_(email) {
       '</p>' +
       '<p style="margin:0 0 4px;color:#7a6b82;font-size:13px">אם הכפתור לא עובד, זה הקישור:</p>' +
       '<p style="margin:0 0 22px;font-size:12px;word-break:break-all"><a href="' + PRESENTATION_URL + '" style="color:#7D4C90">' + PRESENTATION_URL + '</a></p>' +
+      // בלוק המלצה על קורסים נוספים + יצירת קשר
+      '<div style="background:#faf1f7;border:1px solid #f4d3e6;border-radius:14px;padding:18px 18px;margin:0 0 22px">' +
+        '<p style="margin:0 0 14px;color:#33173D">אהבתם את הסדנה? יש לנו מגוון קורסים דיגיטליים — מוזמנים להמליץ לחברים 💜</p>' +
+        '<p style="margin:0 0 14px">' +
+          '<a href="' + COURSES_URL + '" style="display:inline-block;background:#F7AD00;color:#33173D;' +
+          'text-decoration:none;font-weight:bold;font-size:15px;padding:12px 24px;border-radius:999px">לכל הקורסים שלנו ←</a>' +
+        '</p>' +
+        '<p style="margin:0;color:#7a6b82;font-size:13.5px">מוזמנים לשמור איתנו על קשר: ' +
+        '<a href="mailto:' + CONTACT_EMAIL + '" style="color:#ED2E7C;font-weight:bold">' + CONTACT_EMAIL + '</a></p>' +
+      '</div>' +
       '<p style="margin:0;color:#33173D;font-weight:bold">— צוות 42 · ארבעים ושתיים</p>' +
     '</div>';
 
@@ -171,7 +184,10 @@ function sendPresentation_(email) {
     subject: subject,
     htmlBody: html,
     name: '42 · קורס הסושיאל',
-    body: 'תודה על המשוב! הנה מצגת הקורס: ' + PRESENTATION_URL + '\n\n— צוות 42'
+    body: 'תודה על המשוב! הנה מצגת הקורס: ' + PRESENTATION_URL +
+          '\n\nאהבתם את הסדנה? יש לנו מגוון קורסים דיגיטליים, מוזמנים להמליץ לחברים: ' + COURSES_URL +
+          '\nלשמור איתנו על קשר: ' + CONTACT_EMAIL +
+          '\n\n— צוות 42'
   });
 }
 
