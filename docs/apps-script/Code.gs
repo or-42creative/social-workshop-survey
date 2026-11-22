@@ -28,7 +28,7 @@ var SHEET_PER_COURSE = true;
 var META_COLS = ['חותמת זמן', 'קורס', 'מזהה קורס', 'מחזור'];
 
 // קישור למצגת הקורס שיישלח במייל למשתתפים שהשאירו כתובת
-var PRESENTATION_URL = 'https://docs.google.com/presentation/d/12XDwpDNIAus16B2IekDScTUrwoRGq0lO/edit?usp=sharing&ouid=114539384860638201978&rtpof=true&sd=true';
+var PRESENTATION_URL = 'https://drive.google.com/file/d/1h6KMJOVSmViE-m4u3KpM7JLBfh512pA6/view?usp=sharing';
 // קישור לכל הקורסים + כתובת ליצירת קשר (מופיעים במייל)
 var COURSES_URL = 'https://42creative.co.il/social-course/';
 var CONTACT_EMAIL = 'contact@42creative.co.il';
