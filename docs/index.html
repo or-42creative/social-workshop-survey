@@ -234,32 +234,8 @@
         <div><h2>החלק המעשי</h2><small>איך היו שלושת השיעורים?</small></div>
       </div>
 
-      <!-- שיעור 1 -->
-      <div class="lesson-title">📱 שיעור 1 — יסודות הסושיאל והכתיבה</div>
-      <div class="q" data-q="שיעור 1 (יסודות וכתיבה) — מעניין" data-type="scale" data-required="1">
-        <label class="qlabel">כמה מעניין זה היה?<span class="req">*</span></label>
-      </div>
-      <div class="q" data-q="שיעור 1 (יסודות וכתיבה) — מועיל" data-type="scale" data-required="1">
-        <label class="qlabel">כמה מועיל זה היה?<span class="req">*</span></label>
-      </div>
-
-      <!-- שיעור 2 -->
-      <div class="lesson-title">💡 שיעור 2 — תובנות, נקודות השקה ו-RTM</div>
-      <div class="q" data-q="שיעור 2 (תובנות ו-RTM) — מעניין" data-type="scale" data-required="1">
-        <label class="qlabel">כמה מעניין זה היה?<span class="req">*</span></label>
-      </div>
-      <div class="q" data-q="שיעור 2 (תובנות ו-RTM) — מועיל" data-type="scale" data-required="1">
-        <label class="qlabel">כמה מועיל זה היה?<span class="req">*</span></label>
-      </div>
-
-      <!-- שיעור 3 -->
-      <div class="lesson-title">🎬 שיעור 3 — צילום ועריכה</div>
-      <div class="q" data-q="שיעור 3 (צילום ועריכה) — מעניין" data-type="scale" data-required="1">
-        <label class="qlabel">כמה מעניין זה היה?<span class="req">*</span></label>
-      </div>
-      <div class="q" data-q="שיעור 3 (צילום ועריכה) — מועיל" data-type="scale" data-required="1">
-        <label class="qlabel">כמה מועיל זה היה?<span class="req">*</span></label>
-      </div>
+      <!-- שלושת השיעורים נבנים מ-config.js לפי ?track= שבלינק -->
+      <div id="lessons"></div>
     </section>
 
     <!-- Section 4 -->
@@ -328,7 +304,37 @@
   var course   = params.get('course') || params.get('c') || CFG.DEFAULT_COURSE || 'סדנת הסושיאל של 42';
   var courseId = params.get('id') || '';
   var cohort   = params.get('cohort') || params.get('g') || '';
+  var track    = params.get('track') || params.get('t') || 'default';
   document.title = 'משוב · ' + course + ' · 42';
+
+  // --- החלק המעשי: שלושת השיעורים לפי המסלול שבלינק ---
+  // נבנה כאן, לפני כל קוד שקורא ‎.q‎, כדי שהשאלות ייספרו ויישלחו ככל השאר.
+  (function buildLessons(){
+    var box = document.getElementById('lessons');
+    if(!box) return;
+    var tracks = CFG.TRACKS || {};
+    var lessons = tracks[track] || tracks['default'];
+    if(!lessons || !lessons.length){
+      // מסלול לא מוכר ואין ברירת מחדל: מסתירים את הקטע במקום להציג חלק ריק
+      var sec = box.closest ? box.closest('section') : null;
+      if(sec) sec.style.display='none';
+      return;
+    }
+    var html = '';
+    lessons.forEach(function(ls, i){
+      var n = i + 1;
+      var col = 'שיעור ' + n + ' (' + ls.key + ') — ';   // שם העמודה בגיליון
+      html += '<div class="lesson-title">' + (ls.emoji ? ls.emoji + ' ' : '') +
+              'שיעור ' + n + ' — ' + ls.title + '</div>' +
+              '<div class="q" data-q="' + col + 'מעניין" data-type="scale" data-required="1">' +
+                '<label class="qlabel">כמה מעניין זה היה?<span class="req">*</span></label>' +
+              '</div>' +
+              '<div class="q" data-q="' + col + 'מועיל" data-type="scale" data-required="1">' +
+                '<label class="qlabel">כמה מועיל זה היה?<span class="req">*</span></label>' +
+              '</div>';
+    });
+    box.innerHTML = html;
+  })();
 
   // CTA in the hero — גלילה חלקה לשאלה הראשונה
   var startBtn = document.getElementById('startBtn');
@@ -466,7 +472,7 @@
       answers.push({q:q.getAttribute('data-q'), a:valueOf(q)});
     });
     var payload={
-      meta:{course:course, courseId:courseId, cohort:cohort,
+      meta:{course:course, courseId:courseId, cohort:cohort, track:track,
             page:location.href, userAgent:navigator.userAgent},
       answers:answers
     };
