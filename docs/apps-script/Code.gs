@@ -17,8 +17,12 @@
  * ════════════════════════════════════════════════════════════════════
  */
 
-// שם הלשונית בגיליון שאליה נכתבות התשובות (תיווצר אוטומטית אם לא קיימת)
+// לשונית ברירת המחדל: לכאן נכתבות תשובות שהגיעו מלינק בלי שם קורס
 var SHEET_NAME = 'תשובות';
+
+// לשונית נפרדת לכל סדנה, לפי שם הקורס שבלינק (?course=).
+// כבו (false) כדי שהכול יחזור ללשונית אחת.
+var SHEET_PER_COURSE = true;
 
 // עמודות המטא-דאטה הקבועות (תמיד ראשונות, לפי סדר זה)
 var META_COLS = ['חותמת זמן', 'קורס', 'מזהה קורס', 'מחזור'];
@@ -30,6 +34,49 @@ var COURSES_URL = 'https://42creative.co.il/social-course/';
 var CONTACT_EMAIL = 'contact@42creative.co.il';
 // שם השאלה בטופס שמכילה את כתובת המייל
 var EMAIL_FIELD = 'מייל';
+
+/**
+ * שם הלשונית של סדנה. שמות לשוניות בגוגל לא יכולים להכיל : \ / ? * [ ]
+ * ולא להתחיל או להסתיים בגרש, ומוגבלים באורך — לכן מנקים.
+ * בלי שם קורס (לינק סתמי) מחזיר את לשונית ברירת המחדל.
+ */
+function tabName_(course) {
+  var name = String(course || '').replace(/[:\\/?*\[\]]/g, ' ')
+                                 .replace(/\s+/g, ' ')
+                                 .replace(/^'+|'+$/g, '')
+                                 .trim()
+                                 .slice(0, 90)
+                                 .trim();
+  return name || SHEET_NAME;
+}
+
+/** הלשונית של הסדנה — נוצרת עם שורת כותרת מעוצבת אם היא עוד לא קיימת. */
+function sheetFor_(ss, meta) {
+  var name = SHEET_PER_COURSE ? tabName_(meta.course) : SHEET_NAME;
+  var sheet = ss.getSheetByName(name);
+  if (!sheet) sheet = ss.insertSheet(name);
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(META_COLS);
+    sheet.getRange(1, 1, 1, META_COLS.length)
+         .setFontWeight('bold').setBackground('#33173D').setFontColor('#ffffff');
+    sheet.setFrozenRows(1);
+  }
+  return sheet;
+}
+
+/**
+ * תיקון עצמי לשורת הכותרת. השורה היא מה שקובע לאן נכתב כל ערך, ולכן כותרת
+ * שנדרסה בטעות גורמת לנתונים ליפול לעמודה הלא נכונה בשקט. המקרה שקרה בפועל:
+ * B1 נדרס מ-'קורס' ל-'חותמת זמן', ומאז שם הקורס לא נשמר באף שורה חדשה.
+ * מתקנים רק את המקרה הזה בדיוק — כותרת כפולה ב-B שזהה ל-A.
+ */
+function repairHeaders_(sheet, headers) {
+  if (headers.length > 1 && headers[0] === META_COLS[0] && headers[1] === META_COLS[0]) {
+    sheet.getRange(1, 2).setValue(META_COLS[1]);
+    headers[1] = META_COLS[1];
+  }
+  return headers;
+}
 
 function doPost(e) {
   var lock = LockService.getScriptLock();
@@ -45,17 +92,10 @@ function doPost(e) {
     var answers = data.answers || [];
 
     var ss = SpreadsheetApp.getActiveSpreadsheet();
-    var sheet = ss.getSheetByName(SHEET_NAME) || ss.insertSheet(SHEET_NAME);
-
-    // ודא שיש שורת כותרת
-    if (sheet.getLastRow() === 0) {
-      sheet.appendRow(META_COLS);
-      sheet.getRange(1, 1, 1, META_COLS.length)
-           .setFontWeight('bold').setBackground('#33173D').setFontColor('#ffffff');
-      sheet.setFrozenRows(1);
-    }
+    var sheet = sheetFor_(ss, meta);
 
     var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+    headers = repairHeaders_(sheet, headers);
 
     // הוסף עמודות חדשות לכל שאלה שעדיין אין לה עמודה
     answers.forEach(function (item) {
@@ -117,15 +157,15 @@ function doGet(e) {
   try {
     if (e && e.parameter && e.parameter.check === '42data') {
       base.mailFeature = (typeof sendPresentation_ === 'function'); // האם גרסת המייל פרוסה
-      var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
-      if (!sheet || sheet.getLastRow() < 2) {
-        base.rows = 0;
-      } else {
-        var lastRow = sheet.getLastRow();
-        base.rows = lastRow - 1; // פחות שורת הכותרת
-        base.lastRow = sheet.getRange(lastRow, 1, 1, Math.min(3, sheet.getLastColumn()))
-                            .getDisplayValues()[0]; // חותמת זמן, קורס, מזהה
-      }
+      base.sheetPerCourse = SHEET_PER_COURSE;
+      // כמה תשובות יש בכל לשונית, כדי לראות שכל סדנה נוחתת במקום שלה
+      base.tabs = {};
+      base.rows = 0;
+      SpreadsheetApp.getActiveSpreadsheet().getSheets().forEach(function (sh) {
+        var n = Math.max(0, sh.getLastRow() - 1); // פחות שורת הכותרת
+        base.tabs[sh.getName()] = n;
+        base.rows += n;
+      });
       // ?check=42data&sendtest=EMAIL — שולח מייל בדיקה ומחזיר הצלחה/שגיאה מדויקת
       if (e.parameter.sendtest) {
         try {
